@@ -1,0 +1,87 @@
+<div class="app-container">
+  <header>
+    <div class="header-content">
+      <h1>📚 Books Management System</h1>
+      <p class="subtitle">Jan 12, 2023 | Thursday, 11:00 AM</p>
+    </div>
+  </header>
+
+  <section class="form-card">
+    <div class="card-header">
+      <h3>{{ isEditMode ? 'Edit Existing Book' : 'Add New Book' }}</h3>
+    </div>
+
+    <div class="form-grid">
+      <div class="input-group">
+        <label>Title</label>
+        <input [(ngModel)]="currentBook.title" placeholder="Enter title...">
+      </div>
+      <div class="input-group">
+        <label>Author</label>
+        <input [(ngModel)]="currentBook.author" placeholder="Enter author...">
+      </div>
+      <div class="input-group">
+        <label>Price ($)</label>
+        <input type="number" [(ngModel)]="currentBook.price" placeholder="0.00">
+      </div>
+      <div class="input-group">
+        <label>Year</label>
+        <input type="number" [(ngModel)]="currentBook.year" placeholder="YYYY">
+      </div>
+      <div class="input-group full-width">
+        <label>Description</label>
+        <textarea [(ngModel)]="currentBook.description" rows="3" placeholder="Brief summary of the book..."></textarea>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-save" (click)="saveBook()">
+        {{ isEditMode ? 'Update Book' : 'Add Book' }}
+      </button>
+      @if (isEditMode) {
+        <button class="btn btn-cancel" (click)="cancelEdit()">Cancel</button>
+      }
+    </div>
+  </section>
+
+  <section class="table-card">
+    <div class="card-header">
+      <h3>Books List</h3>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Price</th>
+          <th>Year</th>
+          <th>Description</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (book of books; track book.id) {
+        <tr>
+          <td><span class="book-title">{{ book.title }}</span></td>
+          <td class="text-muted">{{ book.author }}</td>
+          <td><span class="price-tag">${{ book.price }}</span></td>
+          <td>{{ book.year }}</td>
+          <td class="desc-cell" title="{{ book.description }}">
+            {{ book.description || 'No description provided' }}
+          </td>
+          <td class="text-center">
+            <button class="btn-icon edit" (click)="editBook(book)">Edit</button>
+            <button class="btn-icon delete" (click)="deleteBook(book.id)">Delete</button>
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="6" class="empty-msg">No books available. Add one above!</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+</div>
+
+<router-outlet />
