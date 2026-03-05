@@ -13,7 +13,7 @@ let database;
 app.use(cors());
 app.use(express.json());
 
-// Middleware to ensure database is connected before processing requests
+
 app.use((req, res, next) => {
     if (!database) {
         return res.status(503).json({ error: "Database not connected yet." });
@@ -56,17 +56,17 @@ app.get("/api/books/GetBooks", async (req, res) => {
     }
 });
 
-// 2. Add a book (Updated with 2 new fields)
+// 2. Add a book 
 app.post("/api/books/AddBook", multer().none(), async (req, res) => {
     try {
-        // Better ID generation: find the highest ID and add 1
+        
         const lastBook = await database.collection("Books").find().sort({ id: -1 }).limit(1).toArray();
         const newId = lastBook.length > 0 ? (parseInt(lastBook[0].id) + 1).toString() : "1";
 
         await database.collection("Books").insertOne({
             id: newId,
             title: req.body.title,
-            description: req.body.description, // Matches Angular key
+            description: req.body.description, 
             price: Number(req.body.price) || 0,
             author: req.body.author, // New Field 1
             year: Number(req.body.year) || 0 // New Field 2
@@ -113,4 +113,5 @@ app.delete("/api/books/DeleteBook", async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: "Failed to delete book" });
     }
+
 });
